@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jobx_api.dao.MemberDao">
+
+    <insert id="insertMember" parameterType="com.example.jobx_api.dto.MemberRequestDto">
+        INSERT INTO member (
+            member_email,
+            member_password,
+            member_mbti,
+            member_birth,
+            member_name,
+            member_gender,
+            member_create_date
+        )
+        VALUES (
+            #{memberEmail},
+            #{memberPassword},
+            #{memberMbti},
+            #{memberBirth},
+            #{memberName},
+            #{memberGender},
+            NOW()
+        )
+    </insert>
+
+    <select id="selectMember" parameterType="com.example.jobx_api.dto.MemberRequestDto" resultType="com.example.jobx_api.dto.MemberDto">
+        SELECT
+            *
+        FROM
+            member m
+        WHERE
+            m.member_email = #{memberEmail}
+    </select>
+
+
+</mapper>

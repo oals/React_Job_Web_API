@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jobx_api.dao.JobDao">
+
+    <select id="selectJobList" parameterType="com.example.jobx_api.dto.SearchRequestDto" resultType="com.example.jobx_api.dto.JobDto">
+
+        SELECT
+            j.*,
+            GROUP_CONCAT(c.cert_nm SEPARATOR '/ ') AS certNm
+        FROM
+            jobs j
+            JOIN job_cert_map jcm ON j.job_cd = jcm.job_cd
+            JOIN cert c ON jcm.cert_id = c.cert_id
+        <where>
+            <if test="findText != null and findText != ''">
+                AND j.job_smcl_nm LIKE CONCAT('%', #{findText}, '%')
+            </if>
+        </where>
+        GROUP BY j.job_cd
+
+    </select>
+
+    <select id="selectJobInfo" parameterType="com.example.jobx_api.dto.SearchRequestDto" resultType="com.example.jobx_api.dto.JobDto">
+        SELECT
+            j.*,
+            GROUP_CONCAT(c.cert_nm SEPARATOR '/ ') AS certNm
+        FROM
+            jobs j
+            JOIN job_cert_map jcm ON j.job_cd = jcm.job_cd
+            JOIN cert c ON jcm.cert_id = c.cert_id
+        WHERE
+            j.job_cd = #{jobCd}
+        GROUP BY j.job_cd
+
+    </select>
+
+
+
+</mapper>

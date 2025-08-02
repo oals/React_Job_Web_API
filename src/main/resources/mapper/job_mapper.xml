@@ -26,11 +26,14 @@
     <select id="selectJobInfo" parameterType="com.example.jobx_api.dto.SearchRequestDto" resultType="com.example.jobx_api.dto.JobDto">
         SELECT
             j.*,
-            GROUP_CONCAT(c.cert_nm SEPARATOR '/ ') AS certNm
+            GROUP_CONCAT(c.cert_nm SEPARATOR '/ ') AS certNm,
+            GROUP_CONCAT(m.major_nm SEPARATOR '/ ') AS majorNm
         FROM
             jobs j
             JOIN job_cert_map jcm ON j.job_cd = jcm.job_cd
             JOIN cert c ON jcm.cert_id = c.cert_id
+            JOIN job_major_map jmm ON j.job_cd = jmm.job_cd
+            JOIN major m ON jmm.major_id = m.major_id
         WHERE
             j.job_cd = #{jobCd}
         GROUP BY j.job_cd

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
     private final MemberDao memberDao;
     private final RedisService redisService;
@@ -47,5 +47,15 @@ public class MemberServiceImpl implements MemberService{
 
         cookieService.saveCookieAuth(response,accessToken,refreshToken);
 
+    }
+
+    @Override
+    public MemberDto memberInfo(String memberEmail) {
+
+        MemberRequestDto memberRequestDto = MemberRequestDto.builder()
+                .memberEmail(memberEmail)
+                .build();
+
+        return memberDao.selectMember(memberRequestDto);
     }
 }

@@ -49,5 +49,7 @@ public class JobDto {
 
     private String certNm;
 
+    private String majorNm;
+
 }
 

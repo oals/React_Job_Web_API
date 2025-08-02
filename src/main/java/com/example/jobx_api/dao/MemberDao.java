@@ -12,3 +12,4 @@ public interface MemberDao {
     MemberDto selectMember(MemberRequestDto memberRequestDto);
 
 }
+

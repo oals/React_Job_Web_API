@@ -2,6 +2,7 @@ package com.example.jobx_api.controller;
 
 import com.example.jobx_api.dto.JobQuestionRequestDto;
 import com.example.jobx_api.dto.MemberDto;
+import com.example.jobx_api.service.JobService;
 import com.example.jobx_api.service.LlamaService;
 import com.example.jobx_api.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ public class LlamaController {
 
     private final LlamaService llamaService;
     private final MemberService memberService;
+    private final JobService jobService;
 
     @PostMapping("/api/test/insert/question")
     public String chat(@RequestBody JobQuestionRequestDto jobQuestionRequestDto) {
@@ -23,7 +25,7 @@ public class LlamaController {
             jobQuestionRequestDto.setMemberBirth(memberDto.getMemberBirth());
             jobQuestionRequestDto.setMemberMbti(memberDto.getMemberMbti());
 
-            return llamaService.getChatResponse(jobQuestionRequestDto);
+            return llamaService.getRecommendJob(jobQuestionRequestDto);
         } catch (Exception e) {
             return "에러 발생: " + e.getMessage();
         }

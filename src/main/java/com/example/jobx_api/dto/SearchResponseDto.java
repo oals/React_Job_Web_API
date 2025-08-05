@@ -12,7 +12,9 @@ import java.util.List;
 public class SearchResponseDto {
 
 
-    List<JobDto> jobList;
+    private List<JobDto> jobList;
 
-    JobDto jobInfo;
+    private Long totalCount;
+
+    private JobDto jobInfo;
 }

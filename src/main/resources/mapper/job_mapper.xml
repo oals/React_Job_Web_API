@@ -6,22 +6,58 @@
 <mapper namespace="com.example.jobx_api.dao.JobDao">
 
     <select id="selectJobList" parameterType="com.example.jobx_api.dto.SearchRequestDto" resultType="com.example.jobx_api.dto.JobDto">
-
         SELECT
             j.*,
-            GROUP_CONCAT(c.cert_nm SEPARATOR '/ ') AS certNm
+            GROUP_CONCAT(c.cert_nm SEPARATOR '/ ') AS certNm,
+            CASE
+                WHEN jb.member_id IS NOT NULL THEN true
+                ELSE false
+            END AS isBookmark
         FROM
             jobs j
             JOIN job_cert_map jcm ON j.job_cd = jcm.job_cd
             JOIN cert c ON jcm.cert_id = c.cert_id
+            LEFT JOIN jobs_bookmarks jb ON jb.job_cd = j.job_cd AND jb.member_id = #{memberId}
         <where>
             <if test="findText != null and findText != ''">
                 AND j.job_smcl_nm LIKE CONCAT('%', #{findText}, '%')
             </if>
         </where>
         GROUP BY j.job_cd
-
+        LIMIT #{size} OFFSET #{offset};
     </select>
+
+
+    <select id="selectJobListTotalCount" parameterType="com.example.jobx_api.dto.SearchRequestDto" resultType="long">
+        SELECT
+            COUNT(*)
+        FROM
+            jobs j
+        <where>
+            <if test="findText != null and findText != ''">
+                AND j.job_smcl_nm LIKE CONCAT('%', #{findText}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPopularJobList" resultType="com.example.jobx_api.dto.JobDto">
+        SELECT
+            j.*,
+            COUNT(jb.job_cd) AS bookmarkCount
+        FROM
+            jobs j
+            JOIN jobs_bookmarks jb ON jb.job_cd = j.job_cd
+        WHERE
+            jb.bookmarked_at BETWEEN DATE_SUB(CURDATE(), INTERVAL 15 DAY)
+            AND DATE_ADD(CURDATE(), INTERVAL 15 DAY)
+        GROUP BY
+            j.job_cd
+        ORDER BY
+            bookmarkCount DESC
+        LIMIT 3
+    </select>
+
+
 
     <select id="selectJobInfo" parameterType="com.example.jobx_api.dto.SearchRequestDto" resultType="com.example.jobx_api.dto.JobDto">
         SELECT
@@ -40,6 +76,24 @@
 
     </select>
 
+    <insert id="insertBookmarks" parameterType="com.example.jobx_api.dto.JobRequestDto">
+        INSERT INTO jobs_bookmarks (
+            member_id,
+            job_cd,
+            bookmarked_at
+        )
+        VALUES (
+            #{memberId},
+            #{jobCd},
+            NOW()
+        )
+    </insert>
 
+    <delete id="deleteBookmarks" parameterType="com.example.jobx_api.dto.JobRequestDto">
+        DELETE FROM
+            jobs_bookmarks
+        WHERE
+            member_id = #{memberId} AND job_cd = #{jobCd}
+    </delete>
 
 </mapper>

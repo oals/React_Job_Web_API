@@ -33,21 +33,30 @@ public class MemberController {
     }
 
     @PostMapping("/api/auth/login")
-    public ResponseEntity<String> memberLogin(HttpServletResponse response, @RequestBody MemberRequestDto memberRequestDto) {
+    public ResponseEntity<MemberResponseDto> memberLogin(
+            HttpServletResponse response,
+            @RequestBody MemberRequestDto memberRequestDto) {
 
         try {
-            memberService.memberLogin(response, memberRequestDto);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("로그인 성공");
+            MemberResponseDto memberResponseDto = memberService.memberLogin(response, memberRequestDto);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(memberResponseDto);
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("비밀번호가 일치하지 않습니다.");
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(MemberResponseDto.builder()
+                            .message("아이디 또는 비밀번호가 일치하지 않습니다.")
+                            .build());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("서버 오류로 로그인에 실패했습니다.");
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(MemberResponseDto.builder()
+                            .message("서버 오류가 발생했습니다.")
+                            .build());
         }
-
     }
+
 
 
 }

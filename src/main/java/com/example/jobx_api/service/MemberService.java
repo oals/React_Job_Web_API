@@ -9,7 +9,7 @@ public interface MemberService {
 
     boolean memberRegister(MemberRequestDto memberRequestDto);
 
-    void memberLogin(HttpServletResponse response, MemberRequestDto memberRequestDto) throws Exception;
+    MemberResponseDto memberLogin(HttpServletResponse response, MemberRequestDto memberRequestDto) throws Exception;
 
     MemberDto memberInfo(String memberEmail);
 }

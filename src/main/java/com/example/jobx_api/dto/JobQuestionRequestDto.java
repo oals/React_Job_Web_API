@@ -16,5 +16,7 @@ public class JobQuestionRequestDto {
 
     private String memberMbti;
 
+    private String testType;
+
     private List<JobQuestionDTO> jobTestResult;
 }

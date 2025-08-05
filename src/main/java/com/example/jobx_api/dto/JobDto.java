@@ -51,5 +51,9 @@ public class JobDto {
 
     private String majorNm;
 
+    private boolean isBookmark;
+
+    private Long bookmarkCount;
+
 }
 

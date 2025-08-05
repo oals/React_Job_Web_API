@@ -7,9 +7,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SearchRequestDto {
+public class SearchRequestDto extends PaginationDto{
 
     private String jobCd;
 
     private String findText;
+
+    private Long memberId;
+
 }

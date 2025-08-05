@@ -6,5 +6,7 @@ import java.io.IOException;
 
 public interface LlamaService {
 
-    String getChatResponse(JobQuestionRequestDto jobQuestionRequestDto) throws IOException;
+    String getRecommendJob(JobQuestionRequestDto jobQuestionRequestDto) throws IOException;
+
+
 }

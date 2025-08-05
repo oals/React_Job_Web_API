@@ -32,7 +32,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void memberLogin(HttpServletResponse response, MemberRequestDto memberRequestDto) throws Exception {
+    public MemberResponseDto memberLogin(HttpServletResponse response, MemberRequestDto memberRequestDto) throws Exception {
 
         MemberDto memberDto = memberDao.selectMember(memberRequestDto);
 
@@ -46,6 +46,11 @@ public class MemberServiceImpl implements MemberService {
         redisService.saveRefreshToken(memberDto.getMemberId(),refreshToken);
 
         cookieService.saveCookieAuth(response,accessToken,refreshToken);
+
+        return MemberResponseDto.builder()
+                .memberId(memberDto.getMemberId())
+                .message("로그인 성공")
+                .build();
 
     }
 

@@ -13,17 +13,10 @@ import org.springframework.web.bind.annotation.*;
 public class LlamaController {
 
     private final LlamaService llamaService;
-    private final MemberService memberService;
-    private final JobService jobService;
 
     @PostMapping("/api/test/insert/question")
     public String chat(@RequestBody JobQuestionRequestDto jobQuestionRequestDto) {
         try {
-
-            MemberDto memberDto = memberService.memberInfo(jobQuestionRequestDto.getMemberEmail());
-
-            jobQuestionRequestDto.setMemberBirth(memberDto.getMemberBirth());
-            jobQuestionRequestDto.setMemberMbti(memberDto.getMemberMbti());
 
             return llamaService.getRecommendJob(jobQuestionRequestDto);
         } catch (Exception e) {

@@ -5,15 +5,36 @@
 
 <mapper namespace="com.example.jobx_api.dao.NewsDao">
 
-    <select id="selectNews" resultType="com.example.jobx_api.dto.NewsDto">
+    <select id="selectNews" parameterType="com.example.jobx_api.dto.SearchRequestDto" resultType="com.example.jobx_api.dto.NewsDto">
         SELECT
             n.*,
             s.name AS sourceName
         FROM
             news n
         JOIN source s ON n.source_id = s.id
-        LIMIT 8
+        <where>
+            <if test="findText != null and findText != ''">
+                AND n.title LIKE CONCAT('%', #{findText}, '%')
+            </if>
+        </where>
+        ORDER BY n.published_at DESC
+        LIMIT #{size} OFFSET #{offset};
 
     </select>
+
+    <select id="selectNewsTotalCount" parameterType="com.example.jobx_api.dto.SearchRequestDto" resultType="long">
+        SELECT
+           COUNT(*)
+        FROM
+            news n
+        <where>
+            <if test="findText != null and findText != ''">
+                AND n.title LIKE CONCAT('%', #{findText}, '%')
+            </if>
+        </where>
+
+    </select>
+
+
 
 </mapper>

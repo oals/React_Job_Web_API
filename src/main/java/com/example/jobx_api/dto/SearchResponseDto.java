@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 public class SearchResponseDto {
 
+    private List<NewsDto> newsList;
 
     private List<JobDto> jobList;
 

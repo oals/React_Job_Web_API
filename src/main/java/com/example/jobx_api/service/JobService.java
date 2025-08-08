@@ -12,6 +12,8 @@ public interface JobService {
 
     SearchResponseDto searchPopularJob();
 
+    SearchResponseDto searchBookmarksJob(SearchRequestDto searchRequestDto);
+
     boolean saveBookmarks(JobRequestDto jobRequestDto);
 
 }

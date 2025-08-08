@@ -12,10 +12,6 @@ public class JobQuestionRequestDto {
 
     private String memberEmail;
 
-    private String memberBirth;
-
-    private String memberMbti;
-
     private String testType;
 
     private List<JobQuestionDTO> jobTestResult;

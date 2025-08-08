@@ -15,4 +15,6 @@ public class SearchRequestDto extends PaginationDto{
 
     private Long memberId;
 
+    private Long searchType;
+
 }

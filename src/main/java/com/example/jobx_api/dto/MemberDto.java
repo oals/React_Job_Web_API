@@ -25,6 +25,10 @@ public class MemberDto {
 
     private String memberGender;
 
+    private String memberInterestField;
+
+    private String memberDesiredSalary;
+
     private LocalDateTime memberCreateDate;
 
 

@@ -58,6 +58,15 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
+    public SearchResponseDto searchBookmarksJob(SearchRequestDto searchRequestDto) {
+        List<JobDto> popularJobList = jobDao.selectJobList(searchRequestDto);
+
+        return SearchResponseDto.builder()
+                .jobList(popularJobList)
+                .build();
+    }
+
+    @Override
     public boolean saveBookmarks(JobRequestDto jobRequestDto) {
 
         try {

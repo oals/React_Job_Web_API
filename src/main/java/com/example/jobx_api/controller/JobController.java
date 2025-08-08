@@ -35,6 +35,12 @@ public class JobController {
         return ResponseEntity.ok(searchResponseDto);
     }
 
+    @GetMapping("/api/job/bookmark/select")
+    public ResponseEntity<SearchResponseDto> selectBookmarks(SearchRequestDto searchRequestDto) {
+        SearchResponseDto searchResponseDto = jobService.searchBookmarksJob(searchRequestDto);
+        return ResponseEntity.ok(searchResponseDto);
+    }
+
     @PostMapping("/api/job/bookmark/insert")
     public ResponseEntity<String> insertBookmarks(@RequestBody JobRequestDto jobRequestDto){
 

@@ -10,14 +10,14 @@
             j.*,
             GROUP_CONCAT(IFNULL(c.cert_nm, '없음') SEPARATOR '/ ') AS certNm,
             CASE
-                WHEN jb.member_id IS NOT NULL THEN true
+                WHEN jb.member_id = #{memberId} THEN true
                 ELSE false
             END AS isBookmark
         FROM
             jobs j
             LEFT JOIN job_cert_map jcm ON j.job_cd = jcm.job_cd
             LEFT JOIN cert c ON jcm.cert_id = c.cert_id
-            LEFT JOIN jobs_bookmarks jb ON jb.job_cd = j.job_cd AND jb.member_id = #{memberId}
+            LEFT JOIN jobs_bookmarks jb ON jb.job_cd = j.job_cd
             <where>
                 <if test="findText != null and findText != ''">
                     AND j.job_smcl_nm LIKE CONCAT('%', #{findText}, '%')
@@ -55,7 +55,7 @@
             COUNT(*)
         FROM
             jobs j
-            LEFT JOIN jobs_bookmarks jb ON jb.job_cd = j.job_cd AND jb.member_id = #{memberId}
+            LEFT JOIN jobs_bookmarks jb ON jb.job_cd = j.job_cd
         <where>
             <if test="findText != null and findText != ''">
                 AND j.job_smcl_nm LIKE CONCAT('%', #{findText}, '%')

@@ -55,6 +55,16 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public MemberResponseDto memberLogout(HttpServletResponse response) {
+
+        cookieService.deleteCookieAuth(response);
+
+        return MemberResponseDto.builder()
+                .message("로그아웃 성공")
+                .build();
+    }
+
+    @Override
     public MemberDto memberInfo(String memberEmail) {
 
         MemberRequestDto memberRequestDto = MemberRequestDto.builder()

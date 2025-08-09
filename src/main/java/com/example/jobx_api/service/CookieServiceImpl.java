@@ -32,4 +32,27 @@ public class CookieServiceImpl implements CookieService{
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
         response.addHeader("Set-Cookie", accessTokenCookie.toString());
     }
+
+    @Override
+    public void deleteCookieAuth(HttpServletResponse response) {
+        ResponseCookie deleteRefreshToken = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(false)
+                .sameSite("Lax")
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        ResponseCookie deleteAccessToken = ResponseCookie.from("accessToken", "")
+                .httpOnly(true)
+                .secure(false)
+                .sameSite("Lax")
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        response.addHeader("Set-Cookie", deleteRefreshToken.toString());
+        response.addHeader("Set-Cookie", deleteAccessToken.toString());
+    }
+
 }

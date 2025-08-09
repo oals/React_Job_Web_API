@@ -11,5 +11,7 @@ public interface MemberService {
 
     MemberResponseDto memberLogin(HttpServletResponse response, MemberRequestDto memberRequestDto) throws Exception;
 
+    MemberResponseDto memberLogout(HttpServletResponse response);
+
     MemberDto memberInfo(String memberEmail);
 }

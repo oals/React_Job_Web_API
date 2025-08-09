@@ -95,23 +95,32 @@ public class LlamaServiceImpl implements LlamaService {
                 "답변은 확신 있는 어조로 작성하고, 절대 모호하거나 조건부 문장을 포함하지 마세요.";
 
 
-        String prompt = setChatRequest(jobQuestionRequestDto.getJobTestResult());
+        try {
+            String prompt = setChatRequest(jobQuestionRequestDto.getJobTestResult());
 
-        Map<String, Object> request = new HashMap<>();
-        request.put("model", "llama3.1:8b-instruct-q8_0");
-        request.put("system", system);
-        request.put("prompt", prompt);
-        request.put("stream", false);
+            Map<String, Object> request = new HashMap<>();
+            request.put("model", "llama3.1:8b-instruct-q8_0");
+            request.put("system", system);
+            request.put("prompt", prompt);
+            request.put("stream", false);
 
-        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
-        String jsonBody = response.getBody();
+            String jsonBody = response.getBody();
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode rootNode = mapper.readTree(jsonBody);
-        String onlyResponse = rootNode.get("response").asText();
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readTree(jsonBody);
+            String onlyResponse = rootNode.get("response").asText();
+            return onlyResponse;
 
-        return onlyResponse;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+
+
 
     }
 }

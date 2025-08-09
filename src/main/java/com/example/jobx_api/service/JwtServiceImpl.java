@@ -1,11 +1,17 @@
 package com.example.jobx_api.service;
 
+import com.example.jobx_api.dao.MemberDao;
 import com.example.jobx_api.dto.MemberDto;
+import com.example.jobx_api.dto.MemberRequestDto;
 import com.example.jobx_api.dto.MemberResponseDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,7 +24,11 @@ import java.util.Base64;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService {
+
+    private final MemberDao memberDao;
+    private final CookieService cookieService;
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -36,6 +46,7 @@ public class JwtServiceImpl implements JwtService {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
+    @Override
     public String createAccessToken(MemberDto memberDto) {
         Claims claims = Jwts.claims().setSubject(String.valueOf(memberDto.getMemberId()));
 
@@ -50,6 +61,47 @@ public class JwtServiceImpl implements JwtService {
                 .compact();
     }
 
+    private String getRefreshTokenFromCookie(HttpServletRequest request, String findTokenTitle) {
+        if (request.getCookies() == null) return null;
+
+        for (Cookie cookie : request.getCookies()) {
+            if (findTokenTitle.equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean refreshToken(HttpServletRequest request, HttpServletResponse response, MemberRequestDto memberRequestDto) {
+
+        try {
+
+            String refreshToken = getRefreshTokenFromCookie(request, "refreshToken");
+
+            if (refreshToken == null || refreshToken.isBlank()) {
+                return false;
+            }
+
+            validateJwtToken(refreshToken);
+
+            MemberDto memberDto = memberDao.selectMember(memberRequestDto);
+
+            String accessToken = createAccessToken(memberDto);
+
+            cookieService.saveCookieAuth(response, accessToken, refreshToken);
+
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    @Override
     public String createRefreshToken(MemberDto memberDto) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + refreshTokenExpiration);
